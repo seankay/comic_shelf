@@ -1,0 +1,7 @@
+<%= form_for @store do |f| %>
+  <%= render 'shared/error_messages', object: @store %>
+  <%= f.label :name%>
+  <%= f.text_field :name%>
+  <br>
+  <%= f.submit %>
+<% end %>

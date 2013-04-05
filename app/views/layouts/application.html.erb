@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ComicShelf</title>
+  <%= yield :dynamic_javascripts %>
+  <%= javascript_include_tag "application" %>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= csrf_meta_tags %>
+  <%= tag :meta, :name => "stripe-key", :content => ENV['STRIPE_PUBLIC_KEY'] %>
+</head>
+<body>
+  <p class="notice"><%= notice %></p>
+  <p class="alert"><%= alert %></p>
+<%= yield %>
+<%= debug(params)if Rails.env.development? %>
+<div id="schema"><%= DatabaseUtility.current %></div>
+</body>
+</html>

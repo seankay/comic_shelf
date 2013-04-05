@@ -1,0 +1,66 @@
+<h1>Plans</h1>
+<% if current_store.subscription.trial? %>
+  <%= render 'shared/trial' %>
+<% end %>
+<ul class="inline center">
+  <% @plans.each do |plan| %>
+    <div id="<%= plan.id %>">
+      <li>
+      <table class="table table-bordered">
+        <tr>
+          <td>
+            <p class="name"><%= plan.name %></p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p class="max_products">Products: <%= plan.max_products %></p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p class="price"><%= number_to_currency plan.price %></p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <% if !current_store.subscription.active? %>
+              <%= link_to "Subscribe", main_app.edit_store_subscription_path(current_store, current_store.subscription, :plan_id => plan.id), class: "btn btn-primary btn-small", id: plan.plan_identifier %>
+            <% else %>
+              <% if current_store.subscription.plan.plan_identifier.eql?(plan.plan_identifier) %>
+                <%= label_tag "Current Plan"%>
+              <% else %>
+                <%= form_tag main_app.store_subscription_path(current_store, current_store.subscription, :plan_id => plan.id), :method => :put do %>
+                  <%= submit_tag plan.name %>
+                <% end %>
+              <% end %>
+            <% end %>
+          </td>
+        </tr>
+      </table>
+      </li>
+    </div>
+  <% end %>
+</ul>
+<% if current_store.subscription.active? %>
+<div id="cancel_subscription">
+  <%= link_to "Cancel Subscription", '#cancel_subscription_modal' ,
+    'data-toggle'=> "modal",
+    :class => 'btn btn-warning'
+  %>
+</div>
+<% end %>
+<div id="cancel_subscription_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="cancel_subscription_modal_label" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3>Cancel <%= "#{current_store.name}" %>'s Subscription</h3>
+  </div>
+  <div class="modal-body">
+    <%= form_tag main_app.store_subscription_path(current_store, current_store.subscription), :method => :delete do %>
+      <%= submit_tag "Cancel Subscription to #{current_store.subscription.plan.name}",class: "btn btn-warning" %>
+    <% end %>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+  </div>
+</div>
