@@ -6,7 +6,8 @@ FactoryGirl.define do
     plan
     store
   end
-  factory :subscription_without_card do
+
+  factory :subscription_with_card,class: Subscription do
     sequence :email do |n|
       "test#{n}@example.com"
     end
