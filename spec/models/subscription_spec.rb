@@ -7,7 +7,7 @@ describe Subscription do
   let(:low_plan){ FactoryGirl.create(:low_plan) }
   let(:subscription){ FactoryGirl.build(:subscription, :plan => low_plan) }
   let(:new_subscription ){ FactoryGirl.build(:subscription, :plan => new_plan) }
-  let(:invalid_subscription){ Subscription.new(email:"test@exampel.com") }
+  let(:invalid_subscription){ Subscription.new(email:"test@example.com") }
 
   subject{ subscription }
 
@@ -71,8 +71,13 @@ describe Subscription do
         low_plan = FactoryGirl.create(:low_plan)
         invalid_subscription.save_without_payment.should be_false
       end
-      it "should email superadmin when transaction fails"
+      it "should email superadmin when transaction fails" do
+      end
 
+      it "should set up trial period" do
+        subscription.save_without_payment
+        subscription.trial_end_date.should be_present
+      end
     end
 
     describe "update_subscription", :vcr, :record => :new_episodes do
@@ -90,6 +95,20 @@ describe Subscription do
         subscription.card_provided.should be_true
         subscription.trial_end_date.should be_present
       end
+
+      it "should remove trial period" do
+        subscription.save!
+        subscription.update_subscription new_subscription
+        subscription.trial?.should be_false
+      end
+
+      it "should make subscription active" do
+        subscription.save!
+        subscription.update_subscription new_subscription
+        subscription.active?.should be_true
+      end
+
+      it "should email subscription information"
 
       it "should return false if update fails" do
         invalid_subscription.update_subscription(low_plan).should be_false
@@ -120,10 +139,23 @@ describe Subscription do
       it "should add subscription to cancellation queue" do
         Workers::SubscriptionCanceler.should have_scheduled(subscription.id)
       end
+
+      it "should email cancellation confirmation"
     end
 
-    describe "restarting subscription" do
-      it "should not change trial_end_date"
+    describe "restarting subscription", :vcr, :record => :new_episodes do
+      before do
+        subscription.save!
+        subscription.update_subscription new_subscription
+        ResqueSpec.reset!
+      end
+
+      it "should not change trial_end_date" do
+        old_trial_end_date = subscription.trial_end_date
+        subscription.cancel_subscription
+        subscription.update_subscription new_subscription
+        subscription.trial_end_date.should eq old_trial_end_date
+      end
     end
   end
 end
