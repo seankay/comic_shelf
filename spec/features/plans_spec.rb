@@ -1,21 +1,23 @@
 require 'spec_helper'
 
-describe "Plans" do
+describe "Plans", :vcr, :record => :new_episodes do
   subject { page }
 
   let(:low_plan) { FactoryGirl.create(:low_plan)}
   let(:mid_plan) { FactoryGirl.create(:mid_plan)}
   let(:high_plan) { FactoryGirl.create(:high_plan)}
+  let(:subscription){ FactoryGirl.build(:subscription, :plan => low_plan) }
+  let(:new_subscription){ FactoryGirl.build(:subscription_with_card,
+                                            :plan => mid_plan,
+                                            :stripe_card_token => test_card_token
+                                           )}
 
   before do 
+    set_host "lvh.me:3000"
     @plans = [low_plan, mid_plan, high_plan]
-    @store = Store.create!(FactoryGirl.attributes_for(:store))
-    subscription = Subscription.new(
-      :email => "test@example.com",
-      :plan_id => Plan.find_by_plan_identifier("low_plan").id,
-    )
     subscription.trial_end_date = Time.now + 14.days
-    @store.subscription = subscription
+    subscription.save_without_payment
+    @store = subscription.store
     user = FactoryGirl.create(:user, :store_id => @store.id)
     visit login_url(:subdomain => user.store.subdomain)
     fill_in "Email", with: user.email
@@ -25,6 +27,8 @@ describe "Plans" do
   end
 
   describe "Page" do
+    it "Should not be accessible by non-admins"
+
     it "should have plans listed" do
       @plans.each do |plan|
         should have_link("Subscribe")
@@ -37,6 +41,7 @@ describe "Plans" do
     end
 
     describe "Elements" do
+      before { ResqueSpec.reset! }
       it "should have information for plan" do
         plan = low_plan
         click_link("#{plan.plan_identifier}")
@@ -47,6 +52,19 @@ describe "Plans" do
 
       it "should have trial days left if current store is on trial subscription" do
         should have_selector("div#trial", text: "Your trial ends")
+      end
+
+      it "should display 'Current Plan' if store has subscription", :vcr, :record => :new_episodes do
+        subscription.update_subscription new_subscription
+        visit store_plans_url(@store, :subdomain => @store.subdomain)
+        should have_content("Current")
+      end
+
+      it "should not display 'Current Plan' if subscription is cancelled", :vcr, :record => :new_episodes do
+        subscription.update_subscription new_subscription
+        subscription.cancel_subscription
+        visit store_plans_url(@store, :subdomain => @store.subdomain)
+        should_not have_content("Current")
       end
     end
   end

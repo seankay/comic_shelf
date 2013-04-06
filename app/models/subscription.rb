@@ -23,10 +23,14 @@ class Subscription < ActiveRecord::Base
     !(trial && active?)
   end
 
+  def pending_cancelation?
+    canceled_at.present? ? true : false
+  end
+
   def save_without_payment
     if valid?
       customer = Stripe::Customer.create(email: email, plan: plan.plan_identifier)
-      save_customer_details customer
+      save_with_customer_details customer
     else
       false
     end
@@ -45,10 +49,10 @@ class Subscription < ActiveRecord::Base
           :card => new_subscription.stripe_card_token,
           :trial_end => "now"
         )
-        self.stripe_customer_token = customer.id
         self.card_provided = true
         self.trial_end_date = Time.now unless trial_end_date
         self.active = true
+        self.canceled_at = nil
       else
         customer.update_subscription(plan: new_subscription.plan.plan_identifier)
       end
@@ -81,7 +85,7 @@ class Subscription < ActiveRecord::Base
 
   private
   
-  def save_customer_details customer
+  def save_with_customer_details customer
     self.trial_end_date = convert_to_date(customer.subscription.trial_end)
     self.stripe_customer_token = customer.id
     save!

@@ -115,6 +115,24 @@ describe Subscription do
       end
     end
 
+    describe "pending_cancelation?", :vcr do
+      before do
+        subscription.save!
+        subscription.update_subscription new_subscription
+        ResqueSpec.reset!
+        subscription.cancel_subscription
+      end
+
+      it "should return true if subscription is cancelled and is active" do
+        subscription.pending_cancelation?.should be_true
+      end
+
+      it "should return false if subscription is updated is nil" do
+        subscription.update_subscription new_subscription
+        subscription.pending_cancelation?.should be_false
+      end
+    end
+
     describe "cancel_subscription", :vcr do
 
       before do

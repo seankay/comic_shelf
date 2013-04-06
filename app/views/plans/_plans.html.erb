@@ -27,11 +27,11 @@
             <% if !current_store.subscription.active? %>
               <%= link_to "Subscribe", main_app.edit_store_subscription_path(current_store, current_store.subscription, :plan_id => plan.id), class: "btn btn-primary btn-small", id: plan.plan_identifier %>
             <% else %>
-              <% if current_store.subscription.plan.plan_identifier.eql?(plan.plan_identifier) %>
+              <% if current_store.subscription.plan.plan_identifier.eql?(plan.plan_identifier) && !current_store.subscription.pending_cancelation? %>
                 <%= label_tag "Current Plan"%>
               <% else %>
                 <%= form_tag main_app.store_subscription_path(current_store, current_store.subscription, :plan_id => plan.id), :method => :put do %>
-                  <%= submit_tag plan.name %>
+                  <%= submit_tag "Subscribe" %>
                 <% end %>
               <% end %>
             <% end %>
