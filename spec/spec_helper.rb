@@ -188,6 +188,6 @@ end
 
 def seed_plans
   [:low_plan, :mid_plan, :high_plan].each do |plan|
-    Plan.create!(FactoryGirl.attributes_for(plan))
+    FactoryGirl.create(plan)
   end
 end
