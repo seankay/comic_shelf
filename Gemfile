@@ -40,7 +40,6 @@ gem 'jquery-rails', '2.2.0'
 
 group :test, :development do
   gem "rspec-rails"
-  gem "guard-rspec"
   gem "shoulda-matchers"
   gem "faker"
   gem "pry"

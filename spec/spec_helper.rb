@@ -89,7 +89,6 @@ RSpec.configure do |config|
   config.order = "random"
 end
 
-
 def set_host (host)
   default_url_options[:host] = host
   Capybara.app_host = "http://" + host
@@ -144,14 +143,14 @@ def test_customer(params={})
     :object => "customer",
     :id => "cus_1YWxXSPn82empY",
     :active_card => {
-      :type => "Visa",
-      :last4 => "4242",
-      :exp_month => 11,
-      :country => "US",
-      :exp_year => 2012,
-      :id => "cc_test_card",
-      :object => "card"
-    },
+    :type => "Visa",
+    :last4 => "4242",
+    :exp_month => 11,
+    :country => "US",
+    :exp_year => 2012,
+    :id => "cc_test_card",
+    :object => "card"
+  },
     :created => 1304114758
   }.merge(params)
 end
@@ -159,30 +158,30 @@ end
 def test_invalid_api_key_error
   {
     "error" => {
-      "type" => "invalid_request_error",
-      "message" => "Invalid API Key provided: invalid"
-    }
+    "type" => "invalid_request_error",
+    "message" => "Invalid API Key provided: invalid"
+  }
   }
 end
 
 def test_invalid_exp_year_error
   {
     "error" => {
-      "code" => "invalid_expiry_year",
-      "param" => "exp_year",
-      "type" => "card_error",
-      "message" => "Your card's expiration year is invalid"
-    }
+    "code" => "invalid_expiry_year",
+    "param" => "exp_year",
+    "type" => "card_error",
+    "message" => "Your card's expiration year is invalid"
+  }
   }
 end
 
 def test_missing_id_error
   {
     :error => {
-      :param => "id",
-      :type => "invalid_request_error",
-      :message => "Missing id"
-    }
+    :param => "id",
+    :type => "invalid_request_error",
+    :message => "Missing id"
+  }
   }
 end
 
