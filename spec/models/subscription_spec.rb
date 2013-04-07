@@ -61,7 +61,7 @@ describe Subscription do
         count = Subscription.count
         expect{subscription.save_without_payment}.to change{Subscription.count}.from(count).to(count+1)
         subscription.card_provided.should be_false
-        subscription.active.should be_false
+        subscription.cancelation_date.should be_nil
       end
 
       it "should return false if save_without_payment fails" do
@@ -147,7 +147,7 @@ describe Subscription do
       end
 
       it "should keep plan features until the end of the billing cycle" do
-        subscription.active.should be_true
+        subscription.active?.should be_true
       end
 
       it "should return false if canecellation fails" do

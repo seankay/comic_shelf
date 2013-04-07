@@ -616,11 +616,11 @@ ActiveRecord::Schema.define(:version => 20130326164808) do
   create_table "subscriptions", :force => true do |t|
     t.string   "email",                                    :null => false
     t.boolean  "card_provided",         :default => false
-    t.boolean  "active",                :default => false
     t.integer  "plan_id",                                  :null => false
     t.integer  "store_id",                                 :null => false
-    t.datetime "trial_end_date"
     t.datetime "canceled_at"
+    t.datetime "cancelation_date"
+    t.datetime "trial_end_date"
     t.string   "stripe_customer_token"
     t.datetime "created_at",                               :null => false
     t.datetime "updated_at",                               :null => false

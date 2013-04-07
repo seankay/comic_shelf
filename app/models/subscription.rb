@@ -8,7 +8,8 @@ class Subscription < ActiveRecord::Base
   attr_accessor :stripe_card_token
 
   def active?
-    active
+    return false if trial?
+    cancelation_date.nil? ? true : Time.now < cancelation_date
   end
 
   def trial?
@@ -20,7 +21,7 @@ class Subscription < ActiveRecord::Base
   end
 
   def deactivate?
-    !(trial && active?)
+    !(trial? && active?)
   end
 
   def pending_cancelation?
@@ -51,7 +52,7 @@ class Subscription < ActiveRecord::Base
         )
         self.card_provided = true
         self.trial_end_date = Time.now unless trial_end_date
-        self.active = true
+        self.cancelation_date = nil
         self.canceled_at = nil
       else
         customer.update_subscription(plan: new_subscription.plan.plan_identifier)
@@ -93,7 +94,8 @@ class Subscription < ActiveRecord::Base
 
   def save_with_cancellation_details details
       self.canceled_at = convert_to_date(details.canceled_at)
-      Resque.enqueue_at(convert_to_date(details.current_period_end), Workers::SubscriptionCanceler, id)
+      self.cancelation_date = convert_to_date details.current_period_end
+      Resque.enqueue_at(convert_to_date(cancelation_date), Workers::SubscriptionCanceler, id)
       save!
   end
 
