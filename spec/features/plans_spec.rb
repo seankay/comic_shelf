@@ -54,6 +54,13 @@ describe "Plans", :vcr, :record => :new_episodes do
         should have_selector("div#trial", text: "Your trial ends")
       end
 
+      it "should display subscription days remaining if pending cancelation ", :vcr do
+        subscription.update_subscription new_subscription
+        subscription.cancel_subscription
+        visit store_plans_url(@store, :subdomain => @store.subdomain)
+        should have_content("Your subscription ends in")
+      end
+
       it "should display 'Current Plan' if store has subscription", :vcr, :record => :new_episodes do
         subscription.update_subscription new_subscription
         visit store_plans_url(@store, :subdomain => @store.subdomain)
@@ -66,6 +73,7 @@ describe "Plans", :vcr, :record => :new_episodes do
         visit store_plans_url(@store, :subdomain => @store.subdomain)
         should_not have_content("Current")
       end
+
     end
   end
 end
