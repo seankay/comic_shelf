@@ -190,8 +190,8 @@ describe Subscription do
       it "should email cancellation confirmation"
 
       it "should email superadmin when transaction fails" do
-        invalid_subscription.plan = invalid_plan
-        invalid_subscription.save_without_payment
+        subscription.save!
+        subscription.cancel_subscription
         SuperAdminMailer.should have_queue_size_of 1
       end
 
