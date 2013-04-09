@@ -1,0 +1,9 @@
+<h1>Stripe Error for Subscription ID:<%= @subscription.id %></h1>
+<h2>Subscription Information</h2>
+<p>
+Subscription Plan: <%= @subscription.plan.name %><br/>
+Store ID: <%= @subscription.store.id %><br/>
+</p>
+<br/>
+<h2>Exception:</h2>
+<p><%= @error_msg %></p>

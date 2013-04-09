@@ -32,10 +32,9 @@ describe "Plans", :vcr, :record => :new_episodes do
     it "should have plans listed" do
       @plans.each do |plan|
         should have_link("Subscribe")
-        should have_selector("div##{plan.id}")
         should have_selector("p", text: "#{plan.max_products}")
         should have_selector("p", text: "#{plan.price}")
-        should have_selector("p", text: "#{plan.name}")
+        should have_selector("h2", text: "#{plan.name}")
         should have_link("Subscribe")
       end
     end

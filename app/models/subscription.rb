@@ -36,8 +36,10 @@ class Subscription < ActiveRecord::Base
       false
     end
   rescue Stripe::InvalidRequestError => e
-    logger.error "Stripe error while creating customer: #{e.message}"
+    error_msg = "Stripe error while creating customer: #{e.message}"
+    logger.error error_msg
     errors.add :base, "There was a problem with your registration."
+    SuperAdminMailer.stripe_customer_creation_exception(self, error_msg).deliver
     false
   end
 
@@ -63,8 +65,10 @@ class Subscription < ActiveRecord::Base
       false
     end
   rescue Stripe::InvalidRequestError => e
-    logger.error "Stripe error while updating customer subscription: #{e.message}"
+    error_msg = "Stripe error while updating customer subscription: #{e.message}"
+    logger.error error_msg
     errors.add :base, "There was a problem updating your subscription."
+    SuperAdminMailer.subscription_stripe_exception(id, error_msg).deliver
     false
   end
 
@@ -79,8 +83,10 @@ class Subscription < ActiveRecord::Base
       false
     end
   rescue Stripe::InvalidRequestError => e
-    logger.error "Stripe error while cancelling customer subscription: #{e.message}"
+    error_msg = "Stripe error while cancelling customer subscription: #{e.message}"
+    logger.error error_msg
     errors.add :base, "There was a problem canelling your subscription."
+    SuperAdminMailer.subscription_stripe_exception(id, error_msg).deliver
     false
   end
 
