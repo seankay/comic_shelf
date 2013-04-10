@@ -100,6 +100,9 @@ describe Subscription do
     end
 
     describe "update_subscription", :vcr, :record => :new_episodes do
+      before do
+        ResqueSpec.reset!
+      end
 
       it "should update subscription plan" do
         subscription.save!
@@ -137,7 +140,6 @@ describe Subscription do
         subscription.save_without_payment
         subscription.trial_end_date.should be_present
       end
-      it "should email subscription information"
 
       it "should return false if update fails" do
         invalid_subscription.update_subscription(low_plan).should be_false
@@ -162,7 +164,7 @@ describe Subscription do
       end
     end
 
-    describe "cancel_subscription", :vcr do
+    describe "cancel_subscription", :vcr, :record => :new_episodes do
 
       before do
         subscription.save!
@@ -186,8 +188,6 @@ describe Subscription do
       it "should add subscription to cancellation queue" do
         Workers::SubscriptionCanceler.should have_scheduled(subscription.id)
       end
-
-      it "should email cancellation confirmation"
 
       it "should email superadmin when transaction fails" do
         subscription.save!

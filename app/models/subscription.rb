@@ -45,6 +45,10 @@ class Subscription < ActiveRecord::Base
 
   def update_subscription new_subscription
     if valid?
+      if new_subscription.plan.id == self.plan.id
+        errors.add :base, "You are already on that plan."
+        return false
+      end
       customer = Stripe::Customer.retrieve(stripe_customer_token)
       if new_subscription.stripe_card_token.present?
         customer.update_subscription(
@@ -78,6 +82,8 @@ class Subscription < ActiveRecord::Base
       details = customer.cancel_subscription
       if successfully_canceled? details
         save_with_cancellation_details details
+      else
+        false
       end
     else 
       false
