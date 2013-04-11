@@ -146,7 +146,7 @@ describe Subscription do
       end
     end
 
-    describe "pending_cancelation?", :vcr do
+    describe "pending_cancelation?", :vcr, :record => :new_episodes do
       before do
         subscription.save!
         subscription.update_subscription new_subscription
@@ -158,7 +158,7 @@ describe Subscription do
         subscription.pending_cancelation?.should be_true
       end
 
-      it "should return false if subscription is updated is nil" do
+      it "should return false if subscription is updated" do
         subscription.update_subscription new_subscription
         subscription.pending_cancelation?.should be_false
       end
@@ -198,6 +198,24 @@ describe Subscription do
       it "should set up trial period" do
         subscription.save_without_payment
         subscription.trial_end_date.should be_present
+      end
+    end
+
+    describe "update_credit_card", :vcr, :record => :new_episodes do
+      before do
+        subscription.save!
+        subscription.update_subscription new_subscription
+        ResqueSpec.reset!
+        invalid_subscription_with_invalid_plan.stripe_card_token = test_card_token
+      end
+
+      it "should update credit card" do
+        subscription.update_credit_card(test_card_token).should be_true
+      end
+
+      it "should email superadmin when transaction fails" do
+        subscription.update_credit_card invalid_subscription_with_invalid_plan
+        SuperAdminMailer.should have_queue_size_of 1
       end
     end
 

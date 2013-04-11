@@ -1,6 +1,5 @@
 jQuery ->
   if typeof Stripe == "undefined"
-    console.log("Stripe is undefined")
     return
   else
     Stripe.setPublishableKey($('meta[name="stripe-key"]').attr('content'))

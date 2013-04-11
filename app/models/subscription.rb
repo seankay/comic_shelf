@@ -43,10 +43,27 @@ class Subscription < ActiveRecord::Base
     false
   end
 
+  def update_credit_card stripe_card_token
+    if stripe_card_token.present?
+      customer = Stripe::Customer.retrieve(stripe_customer_token)
+      customer.card = stripe_card_token
+      customer.save
+      save!
+    else
+      false
+    end
+  rescue Stripe::InvalidRequestError, Stripe::CardError => e
+    error_msg = "Stripe error while updating customer credit card: #{e.message}"
+    logger.error error_msg
+    errors.add :base, "There was a problem updating your credit card."
+    SuperAdminMailer.subscription_stripe_exception(id, error_msg).deliver
+    false
+  end
+
   def update_subscription new_subscription
     if valid?
-      if new_subscription.plan.id == self.plan.id
-        errors.add :base, "You are already on that plan."
+      if(new_subscription.plan.id == self.plan.id) && !pending_cancelation?
+        errors.add :base, "You are already on the #{plan.name} plan."
         return false
       end
       customer = Stripe::Customer.retrieve(stripe_customer_token)

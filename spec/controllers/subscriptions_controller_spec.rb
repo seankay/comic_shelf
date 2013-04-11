@@ -20,20 +20,27 @@ describe SubscriptionsController do
   end
 
   describe "POST Update", :vcr, :record => :new_episodes do
-    it "should email subscription information" do
+    before do
       @double_subscription.stub(:update_subscription).and_return(true)
       post :update, id: subscription.id, subscription: new_subscription, store_id: store.id, plan_id: new_subscription.plan.id
+    end
+    it "should email subscription information" do
       UserMailer.should have_queue_size_of 1
     end
   end
 
   describe "DELETE Destroy", :vcr, :record => :new_episodes do
-    it "should email subscription cancelation confirmation" do
+    before do
       @double_subscription.stub(:cancel_subscription).and_return(true)
       delete :destroy, id: subscription.id, subscription: subscription, store_id: store.id
+    end
+
+    it "should email subscription cancelation confirmation" do
       UserMailer.should have_queue_size_of 1
+    end
+
+    it "should redirect to shop" do
       response.should redirect_to spree_url(:host => "lvh.me:3000",:subdomain => store.subdomain)
     end
   end
-
 end

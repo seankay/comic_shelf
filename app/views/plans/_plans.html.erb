@@ -47,12 +47,23 @@
     </tr>
   </table>
   <% if current_store.subscription.active? %>
-    <div id="cancel_subscription">
-      <%= link_to "Cancel Subscription", '#cancel_subscription_modal' ,
-        'data-toggle' => "modal",
-        :class        => 'btn btn-danger white'
-      %>
-    </div>
+    <ul class="inline">
+      <li>
+      <div>
+        <%=link_to "Update Credit Card",  store_subscription_edit_credit_card_path(current_store, current_store.subscription),
+          class: "btn btn-warning"
+        %>
+      </div>
+      </li>
+      <li>
+      <div id="cancel_subscription">
+        <%= link_to "Cancel Subscription", '#cancel_subscription_modal' ,
+          'data-toggle' => "modal",
+          :class        => 'btn btn-danger white'
+        %>
+      </div>
+      </li>
+    </ul>
   <% end %>
 </div>
 <div id="cancel_subscription_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="cancel_subscription_modal_label" aria-hidden="true">
