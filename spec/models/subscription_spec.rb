@@ -5,31 +5,18 @@ describe Subscription do
 
   let(:new_plan){ FactoryGirl.create(:mid_plan) }
   let(:low_plan){ FactoryGirl.create(:low_plan) }
-  let(:subscription){ FactoryGirl.build(:subscription, :plan => low_plan) }
-  let(:new_subscription ){ FactoryGirl.build(:subscription, :plan => new_plan) }
+  let(:subscription){ FactoryGirl.build(:subscription, plan: low_plan, stripe_customer_token:test_customer[:id]) }
+  let(:new_subscription ){ FactoryGirl.build(:subscription, plan: new_plan) }
   let(:invalid_subscription){ Subscription.new(email:"test@example.com") }
-  let(:invalid_plan){  
-    Plan.create!(
-      name: "invalid plan",
-      plan_identifier: "invalid_plan",
-      price: 1,
-      max_products: 0
-  )
-  }
+  let(:invalid_plan){ FactoryGirl.create(:plan, name:"invalid plan", plan_identifier: "invalid_plan", price:1, max_products: 0) }
   let(:invalid_subscription_with_invalid_plan){ 
-    Subscription.new(
-      :email => "test@example.com",
-      :plan_id => Plan.find_by_plan_identifier("invalid_plan")
-  )
+    FactoryGirl.build(:subscription, email: "test@example.com",plan: invalid_plan, 
+                      plan_id: Plan.find_by_plan_identifier("invalid_plan"),
+                      stripe_card_token: test_card_token
+                     )
   }
 
   subject{ subscription }
-
-  before do
-    subscription.stripe_customer_token = test_customer[:id]
-    subscription.plan = low_plan
-    invalid_subscription_with_invalid_plan.plan = invalid_plan
-  end
 
   describe "Attributes" do
     it { should respond_to(:email)}
@@ -54,7 +41,7 @@ describe Subscription do
       end
     end
 
-    describe "active?", :vcr do
+    describe "active?", :vcr, :record => :new_episodes do
       it "should return false if card is not provided or is on trial" do
         subscription.save_without_payment
         subscription.active?.should be_false
@@ -84,7 +71,7 @@ describe Subscription do
       end
     end
 
-    describe "save_without_payment", :vcr do
+    describe "save_without_payment", :vcr, :record => :new_episodes do
       before { ResqueSpec.reset! }
 
       it "should store customer data on successful trial subscription" do
@@ -102,6 +89,7 @@ describe Subscription do
       end
 
       it "should email superadmin when transaction fails" do
+        invalid_subscription_with_invalid_plan.plan = invalid_plan
         invalid_subscription_with_invalid_plan.save_without_payment
         SuperAdminMailer.should have_queue_size_of 1
       end
@@ -114,9 +102,7 @@ describe Subscription do
     end
 
     describe "update_subscription", :vcr, :record => :new_episodes do
-      before do
-        ResqueSpec.reset!
-      end
+      before { ResqueSpec.reset! } 
 
       it "should update subscription plan" do
         subscription.save!
@@ -147,13 +133,9 @@ describe Subscription do
 
       it "should email superadmin when transaction fails" do
         subscription.save!
+        invalid_subscription_with_invalid_plan.plan = invalid_plan
         subscription.update_subscription invalid_subscription_with_invalid_plan
         SuperAdminMailer.should have_queue_size_of 1
-      end
-
-      it "should set up trial period" do
-        subscription.save_without_payment
-        subscription.trial_end_date.should be_present
       end
 
       it "should return false if update fails" do
@@ -171,37 +153,38 @@ describe Subscription do
     end
 
     describe "pending_cancelation?", :vcr, :record => :new_episodes do
-      before do
-        subscription.save!
-        subscription.update_subscription new_subscription
-        ResqueSpec.reset!
-        subscription.cancel_subscription
-      end
+      before {  ResqueSpec.reset! }
 
       it "should return true if subscription is cancelled and is active" do
+        subscription.save!
+        subscription.update_subscription new_subscription
+        subscription.cancel_subscription
         subscription.pending_cancelation?.should be_true
       end
 
       it "should return false if subscription is updated" do
+        subscription.save!
+        subscription.update_subscription new_subscription
+        subscription.cancel_subscription
         subscription.update_subscription new_subscription
         subscription.pending_cancelation?.should be_false
       end
     end
 
     describe "cancel_subscription", :vcr, :record => :new_episodes do
-
-      before do
-        subscription.save!
-        subscription.update_subscription new_subscription
-        ResqueSpec.reset!
-        subscription.cancel_subscription
-      end
+      before {  ResqueSpec.reset! }
 
       it "should set canceled_at value" do
+        subscription.save!
+        subscription.update_subscription new_subscription
+        subscription.cancel_subscription
         subscription.canceled_at.should be_present
       end
 
       it "should keep plan features until the end of the billing cycle" do
+        subscription.save!
+        subscription.update_subscription new_subscription
+        subscription.cancel_subscription
         subscription.active?.should be_true
       end
 
@@ -210,42 +193,43 @@ describe Subscription do
       end
 
       it "should add subscription to cancellation queue" do
+        subscription.save!
+        subscription.update_subscription new_subscription
+        subscription.cancel_subscription
         Workers::SubscriptionCanceler.should have_scheduled(subscription.id)
       end
 
       it "should email superadmin when transaction fails" do
         subscription.save!
-        subscription.cancel_subscription
+        subscription.update_subscription new_subscription
+        2.times { subscription.cancel_subscription} 
         SuperAdminMailer.should have_queue_size_of 1
       end
     end
 
     describe "update_credit_card", :vcr, :record => :new_episodes do
-      before do
-        subscription.save!
-        subscription.update_subscription new_subscription
-        ResqueSpec.reset!
-        invalid_subscription_with_invalid_plan.stripe_card_token = test_card_token
-      end
+      before { ResqueSpec.reset! }
 
       it "should update credit card" do
+        subscription.save!
+        subscription.update_subscription new_subscription
         subscription.update_credit_card(test_card_token).should be_true
       end
 
       it "should email superadmin when transaction fails" do
+        subscription.save!
+        subscription.update_subscription new_subscription
+        invalid_subscription_with_invalid_plan.plan = invalid_plan
         subscription.update_credit_card invalid_subscription_with_invalid_plan
         SuperAdminMailer.should have_queue_size_of 1
       end
     end
 
     describe "restarting subscription", :vcr, :record => :new_episodes do
-      before do
-        subscription.save!
-        subscription.update_subscription new_subscription
-        ResqueSpec.reset!
-      end
 
       it "should not change trial_end_date" do
+        subscription.save!
+        subscription.update_subscription new_subscription
         old_trial_end_date = subscription.trial_end_date
         subscription.cancel_subscription
         subscription.update_subscription new_subscription

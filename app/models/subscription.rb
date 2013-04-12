@@ -47,10 +47,10 @@ class Subscription < ActiveRecord::Base
     false
   end
 
-  def update_credit_card stripe_card_token
-    if stripe_card_token.present?
+  def update_credit_card new_stripe_card_token
+    if new_stripe_card_token.present?
       customer = Stripe::Customer.retrieve(stripe_customer_token)
-      customer.card = stripe_card_token
+      customer.card = new_stripe_card_token
       customer.save
       save!
     else

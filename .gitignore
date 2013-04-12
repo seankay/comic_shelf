@@ -23,3 +23,5 @@ config/database.yml
 
 #vcr
 /spec/vcr
+#ctags
+tags
