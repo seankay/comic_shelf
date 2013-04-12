@@ -159,6 +159,15 @@ describe Subscription do
       it "should return false if update fails" do
         invalid_subscription.update_subscription(low_plan).should be_false
       end
+
+      it "should remove enqueued cancelation job if present" do
+        subscription.save!
+        subscription.update_subscription new_subscription
+        subscription.cancel_subscription
+        Workers::SubscriptionCanceler.should have_schedule_size_of 1
+        subscription.update_subscription new_subscription
+        Workers::SubscriptionCanceler.should have_schedule_size_of 0
+      end
     end
 
     describe "pending_cancelation?", :vcr, :record => :new_episodes do

@@ -79,13 +79,12 @@ class Subscription < ActiveRecord::Base
         )
         self.card_provided = true
         self.trial_end_date = Time.now
-        self.cancelation_date = nil
-        self.canceled_at = nil
       else
         customer.update_subscription(plan: new_subscription.plan.plan_identifier)
-        self.cancelation_date = nil
-        self.canceled_at = nil
       end
+      Resque.remove_delayed(Workers::SubscriptionCanceler, id) if pending_cancelation?
+      self.cancelation_date = nil
+      self.canceled_at = nil
       self.plan = new_subscription.plan
       save!
     else
