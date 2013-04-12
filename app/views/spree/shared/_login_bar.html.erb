@@ -1,6 +1,6 @@
 <% if spree_current_user %>
     <% if current_user.has_role? "admin" %>
-      <% unless current_store.subscription.active? %>
+      <% if !current_store.subscription.active? || current_store.subscription.pending_cancelation? %>
         <li><%= link_to t(:subscribe), main_app.store_plans_path(current_store) %></li>
       <% end %>
       <li><%= link_to t(:dashboard), admin_path(spree_current_user)%></li>
