@@ -1,0 +1,14 @@
+<div id="cancel_subscription_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="cancel_subscription_modal_label" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3>Cancel <%= "#{current_store.name}" %>'s Subscription</h3>
+  </div>
+  <div class="modal-body">
+    <%= form_tag main_app.store_subscription_path(current_store, current_store.subscription), :method => :delete do %>
+      <%= submit_tag "Cancel Subscription to #{current_store.subscription.plan.name}",class: "btn btn-warning" %>
+    <% end %>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+  </div>
+</div>

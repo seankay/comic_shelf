@@ -26,7 +26,6 @@ describe Subscription do
   subject{ subscription }
 
   before do
-    new_subscription.stripe_card_token = test_card_token
     subscription.stripe_customer_token = test_customer[:id]
     subscription.plan = low_plan
     invalid_subscription_with_invalid_plan.plan = invalid_plan
@@ -42,6 +41,19 @@ describe Subscription do
   end
 
   describe "Methods" do
+    
+    describe "card_provided?", :vcr, :record => :new_episodes do
+      it "should return false if card is not provided or is on trial" do
+        subscription.save_without_payment
+        subscription.active?.should be_false
+      end
+
+      it "should return true if card is provided" do
+        new_subscription.stripe_card_token = test_card_token
+        subscription.update_subscription(new_subscription).should be_true
+      end
+    end
+
     describe "active?", :vcr do
       it "should return false if card is not provided or is on trial" do
         subscription.save_without_payment
@@ -49,7 +61,8 @@ describe Subscription do
       end
 
       it "should return true if card is provided" do
-        subscription
+        new_subscription.stripe_card_token = test_card_token
+        subscription.update_subscription(new_subscription).should be_true
       end
     end
 
@@ -65,6 +78,7 @@ describe Subscription do
       end
 
       it "should return false if card is provided" do
+
         subscription.card_provided = true
         subscription.trial?.should be_false
       end
@@ -112,6 +126,7 @@ describe Subscription do
 
       it "should update card, trial_end_date, and subscription plan" do
         subscription.save!
+        new_subscription.stripe_card_token = test_card_token
         subscription.update_subscription new_subscription
         subscription.plan.should eq new_plan
         subscription.card_provided.should be_true
@@ -193,11 +208,6 @@ describe Subscription do
         subscription.save!
         subscription.cancel_subscription
         SuperAdminMailer.should have_queue_size_of 1
-      end
-
-      it "should set up trial period" do
-        subscription.save_without_payment
-        subscription.trial_end_date.should be_present
       end
     end
 

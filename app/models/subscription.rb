@@ -13,11 +13,15 @@ class Subscription < ActiveRecord::Base
   end
 
   def trial?
-    if card_provided
+    if card_provided?
       false
     else
       trial_end_date.nil? ? false : Time.now <= trial_end_date
     end
+  end
+
+  def card_provided?
+    card_provided
   end
 
   def deactivate?
@@ -74,11 +78,13 @@ class Subscription < ActiveRecord::Base
           :trial_end => "now"
         )
         self.card_provided = true
-        self.trial_end_date = Time.now unless trial_end_date
+        self.trial_end_date = Time.now
         self.cancelation_date = nil
         self.canceled_at = nil
       else
         customer.update_subscription(plan: new_subscription.plan.plan_identifier)
+        self.cancelation_date = nil
+        self.canceled_at = nil
       end
       self.plan = new_subscription.plan
       save!

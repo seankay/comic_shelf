@@ -73,6 +73,17 @@ describe "Plans", :vcr, :record => :new_episodes do
         should_not have_content("Current")
       end
 
+      it "should not show cancel subscription button when current subscription is pending cancelation" do
+        subscription.update_subscription new_subscription
+        subscription.cancel_subscription
+        visit store_plans_url(@store, :subdomain => @store.subdomain)
+        should_not have_link "Cancel Subscription"
+      end
+
+      it "should not show update credit card button when current subscription has not provided credit card yet" do
+        should_not have_link "Update Credit Card"
+      end
+
     end
   end
 end
