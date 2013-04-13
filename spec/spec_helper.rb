@@ -114,6 +114,10 @@ def test_card_token
   "tok_1X642XUE6V0FrB"
 end
 
+def test_invalid_card
+  "42424242424242422"
+end
+
 def test_customer(params={})
   {
     :subscription_history => [],

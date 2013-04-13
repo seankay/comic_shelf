@@ -12,7 +12,7 @@ describe Subscription do
   let(:invalid_subscription_with_invalid_plan){ 
     FactoryGirl.build(:subscription, email: "test@example.com",plan: invalid_plan, 
                       plan_id: Plan.find_by_plan_identifier("invalid_plan"),
-                      stripe_card_token: test_card_token
+                      stripe_card_token: test_invalid_card
                      )
   }
 

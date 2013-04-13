@@ -34,8 +34,8 @@ class Subscription < ActiveRecord::Base
 
   def save_without_payment
     if valid?
-      customer = Stripe::Customer.create(email: email, plan: plan.plan_identifier)
-      save_with_customer_details customer
+      customer_info = Stripe::Customer.create(email: email, plan: plan.plan_identifier)
+      save_with_customer_details customer_info
     else
       false
     end
@@ -49,7 +49,6 @@ class Subscription < ActiveRecord::Base
 
   def update_credit_card new_stripe_card_token
     if new_stripe_card_token.present?
-      customer = Stripe::Customer.retrieve(stripe_customer_token)
       customer.card = new_stripe_card_token
       customer.save
       save!
@@ -70,7 +69,6 @@ class Subscription < ActiveRecord::Base
         errors.add :base, "You are already on the #{plan.name} plan."
         return false
       end
-      customer = Stripe::Customer.retrieve(stripe_customer_token)
       if new_subscription.stripe_card_token.present?
         customer.update_subscription(
           :plan => new_subscription.plan.plan_identifier, 
@@ -100,13 +98,9 @@ class Subscription < ActiveRecord::Base
 
   def cancel_subscription
     if valid?
-      customer = Stripe::Customer.retrieve(stripe_customer_token)
       details = customer.cancel_subscription
-      if successfully_canceled? details
-        save_with_cancellation_details details
-      else
-        false
-      end
+      successfully_canceled?(details) ? 
+        save_with_cancelation_details(details) : false
     else 
       false
     end
@@ -119,25 +113,25 @@ class Subscription < ActiveRecord::Base
   end
 
   private
+
+  def customer
+    @customer ||= Stripe::Customer.retrieve(stripe_customer_token)
+  end
   
   def save_with_customer_details customer
-    self.trial_end_date = convert_to_date(customer.subscription.trial_end)
+    self.trial_end_date = Time.zone.at(customer.subscription.trial_end)
     self.stripe_customer_token = customer.id
     save!
   end
 
-  def save_with_cancellation_details details
-      self.canceled_at = convert_to_date(details.canceled_at)
-      self.cancelation_date = convert_to_date details.current_period_end
-      Resque.enqueue_at(convert_to_date(cancelation_date), Workers::SubscriptionCanceler, id)
+  def save_with_cancelation_details details
+      self.canceled_at = Time.zone.at(details.canceled_at)
+      self.cancelation_date = Time.zone.at details.current_period_end
+      Resque.enqueue_at(Time.zone.at(cancelation_date), Workers::SubscriptionCanceler, id)
       save!
   end
 
   def successfully_canceled? details
     ["cancelled", "canceled"].include? details.status
-  end
-  
-  def convert_to_date timestamp
-    Time.zone.at(timestamp)
   end
 end
