@@ -1,4 +1,12 @@
 GIT
+  remote: git://github.com/halo/spree_digital.git
+  revision: 7dabf1a5203eb42c43b573fe5576aa0adc1a9822
+  branch: master
+  specs:
+    spree_digital (1.1.1)
+      spree_core (~> 1.3.0)
+
+GIT
   remote: git://github.com/resque/resque.git
   revision: a1429d83d1843e29e639c1a7d5a902070c433866
   branch: 1-x-stable
@@ -380,6 +388,7 @@ DEPENDENCIES
   poltergeist
   pry
   rails (= 3.2.13)
+  rake
   resque!
   resque-scheduler
   resque_mailer
@@ -388,6 +397,7 @@ DEPENDENCIES
   sass-rails (~> 3.2.3)
   shoulda-matchers
   spree (= 1.3.2)
+  spree_digital!
   spree_gateway!
   stripe
   uglifier (>= 1.0.3)

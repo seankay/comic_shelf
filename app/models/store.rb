@@ -5,7 +5,7 @@ class Store < ActiveRecord::Base
 
   before_validation :create_subdomain
   before_save :create_database
-  before_save :switch_database
+  after_create :switch_database
 
   ALLOWED_NAMES = /([0-9a-z]*\-[0-9a-z]*)*/i
   ALLOWED_SUBDOMAINS = /[^0-9a-zA-Z]/
@@ -31,5 +31,4 @@ class Store < ActiveRecord::Base
   def switch_database
     DatabaseUtility.switch(database)
   end
-
 end
