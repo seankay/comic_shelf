@@ -2,16 +2,15 @@
 <html>
 <head>
   <title>ComicShelf</title>
-  <%= yield :dynamic_javascripts %>
   <%= javascript_include_tag "application" %>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= csrf_meta_tags %>
-  <%= tag :meta, :name => "stripe-key", :content => ENV['STRIPE_PUBLIC_KEY'] %>
 </head>
 <body>
-  <%= render 'layouts/navbar' %>
+  <%= render 'layouts/home_navbar' %>
   <%= render 'shared/flash_notification' %>
   <%= yield %>
   <%= debug(params)if Rails.env.development? %>
+  <%= "Schema: #{DatabaseUtility.current}" if Rails.env.development? %>
 </body>
 </html>

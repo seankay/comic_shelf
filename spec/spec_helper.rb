@@ -99,15 +99,15 @@ def login user
   click_button "Sign in"
 end    
 
+def register_and_login_user user
+  register_user user
+  login user
+end
+
 def register_user(user)
-  set_host "lvh.me:3000"
-  visit signup_url(:subdomain => user.store.subdomain)
-  within("#new_user") do
-    fill_in "user_email", :with                 => user.email
-    fill_in "user_password", :with              => user.password
-    fill_in "user_password_confirmation", :with => user.password
-  end
-  click_button "Sign up"
+  scope_to_store user.store
+  user.save!
+  user.set_roles(["admin"])
 end
 
 def test_card_token

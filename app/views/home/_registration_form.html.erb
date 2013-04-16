@@ -1,0 +1,10 @@
+<div id="registration_form">
+  <%= form_for(resource, :as => resource_name, :url => url_for(:controller => "users/registrations", :action => "create_with_store", :resource_name => resource_name)) do |f| %>
+  <%= devise_error_messages! %>
+
+  <%= text_field_tag :store_name,nil, placeholder: "Store Name" %>
+  <%= f.email_field :email, placeholder: "Email Address" %>
+  <%= f.password_field :password, placeholder: "Password" %>
+  <%= f.submit "Get Started!" %>
+<% end %>
+</div>

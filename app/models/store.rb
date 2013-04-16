@@ -14,6 +14,10 @@ class Store < ActiveRecord::Base
   validates :subdomain, :format => { :with => ALLOWED_NAMES }, :uniqueness => true,
     :presence => true, :length => { :minimum => 3 , :maximum => 40 }
 
+  def error_reasons 
+    "The store's #{errors.full_messages.first}"
+  end
+
   def database
     subdomain
   end

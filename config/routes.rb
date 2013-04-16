@@ -5,6 +5,7 @@ ComicShelf::Application.routes.draw do
     get '/login', :to => "devise/sessions#new"
     get '/signup', :to => "devise/registrations#new"
     delete '/logout', :to => "devise/sessions#destroy"
+    post '/create_with_store', :to => "users/registrations#create_with_store"
   end
 
   devise_for :users, controllers: { registrations: "users/registrations"}

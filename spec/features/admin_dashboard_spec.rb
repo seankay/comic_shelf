@@ -1,15 +1,15 @@
 require 'spec_helper'
 
 describe "Admin Dashboard" do
+  let(:subscription) { FactoryGirl.build(:subscription) }
   let(:store) { FactoryGirl.create(:store)}
   subject { page }
 
   before do 
+    store.subscription = subscription
     seed_plans
     clean_up_tables(store, User)
-    user = FactoryGirl.build(:user, :store_id => store.id)
-    register_user(user)
-    user.set_roles ["admin"]
+    register_and_login_user FactoryGirl.build(:user, :store_id => store.id)
     click_link "Dashboard"
     click_link "Configuration"
   end
