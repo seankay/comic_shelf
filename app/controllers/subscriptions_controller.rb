@@ -14,9 +14,9 @@ class SubscriptionsController < ApplicationController
   def update
     @subscription = Subscription.find(params[:id])
     if params[:subscription]
-      updated_subscription = new_paying_subscription(params[:subscription])
+      updated_subscription = Subscription.new(params[:subscription])
     else
-      updated_subscription = updated_paying_subscription(params["plan_id"], current_user.email)
+      updated_subscription = Subscription.new(plan_id: params["plan_id"], current_user.email)
     end
 
     if @subscription.update_subscription updated_subscription
@@ -54,15 +54,5 @@ class SubscriptionsController < ApplicationController
       flash[:alert] = "There was a problem updating your credit card information."
       render :edit_credit_card 
     end
-  end
-
-  private
-
-  def new_paying_subscription subscription
-    new_subscription = Subscription.new(subscription)
-  end
-
-  def updated_paying_subscription plan_id, email
-    Subscription.new(plan_id: plan_id, email:email)
   end
 end
