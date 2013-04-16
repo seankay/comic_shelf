@@ -16,7 +16,7 @@ class SubscriptionsController < ApplicationController
     if params[:subscription]
       updated_subscription = Subscription.new(params[:subscription])
     else
-      updated_subscription = Subscription.new(plan_id: params["plan_id"], current_user.email)
+      updated_subscription = Subscription.new(plan_id: params["plan_id"], email:current_user.email)
     end
 
     if @subscription.update_subscription updated_subscription
