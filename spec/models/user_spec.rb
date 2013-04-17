@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe User do
+describe Spree::User do
 
   let(:user) { FactoryGirl.build(:user)}
   subject { user }
@@ -10,7 +10,6 @@ describe User do
     it { should respond_to(:password)}
     it { should respond_to(:password_confirmation)}
     it { should respond_to(:remember_me)}
-    it { should respond_to(:name)}
     it { should belong_to(:store)}
   end
 
@@ -24,11 +23,13 @@ describe User do
       user.has_role?(:admin).should be_true
     end
 
-    it "should process array of roles" do
-      roles = ["admin", "trial", "superadmin"]
-      user.set_roles(roles)
-      roles.each do |role|
-        user.has_role?(role).should be_true
+    describe "set_roles" do
+      it "should process array of roles" do
+        roles = ["admin", "trial", "superadmin"]
+        user.set_roles(roles)
+        roles.each do |role|
+          user.has_role?(role).should be_true
+        end
       end
     end
   end

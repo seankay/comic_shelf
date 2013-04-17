@@ -9,11 +9,11 @@ Spree.config do |config|
   config.site_name = "Comic Shop"
 end
 
-Spree.user_class = "User"
+# Spree.user_class = "User"
 
-Rails.application.config.to_prepare do
-  require_dependency 'spree/authentication_helpers'
-end
+# Rails.application.config.to_prepare do
+  # require_dependency 'spree/authentication_helpers'
+# end
 
 #enable auto capture for Stripe et al.
 Spree::Config[:auto_capture] = true unless Spree::Config[:auto_capture].present?

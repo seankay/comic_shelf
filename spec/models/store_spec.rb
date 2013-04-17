@@ -12,7 +12,7 @@ describe Store do
 
   describe "Attributes" do
     it { should respond_to(:name)}
-    it { should have_many(:users)}
+    it { should have_many(:spree_users)}
     it { should have_one(:subscription)}
 
     describe "name" do
@@ -51,7 +51,7 @@ describe Store do
 
       it "should have isolated schemas" do
         scope_to_store(store)
-        store.users << user
+        store.spree_users << user
         User.count.should eq 1
         scope_to_store(store2)
         User.count.should eq 0

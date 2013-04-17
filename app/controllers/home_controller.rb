@@ -2,7 +2,7 @@ class HomeController < ApplicationController
   layout "home"
 
   def index
-    sign_out current_user if current_user
+    @user = Spree::User.new
     @store = Store.new
   end
 

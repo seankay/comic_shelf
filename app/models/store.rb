@@ -1,5 +1,5 @@
 class Store < ActiveRecord::Base
-  has_many :users
+  has_many :spree_users, class_name: "Spree::User"
   has_one :subscription
   attr_accessible :name, :subdomain
 

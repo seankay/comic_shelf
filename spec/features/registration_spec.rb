@@ -21,7 +21,7 @@ describe "Registration Process" do
     context "valid registration" do
       before do
         seed_plans
-        within("#registration_form") do
+        within("#new-customer") do
           fill_in "store_name", with: test_store.name
           fill_in "user_email", with: valid_email
           fill_in "user_password", with: user.password
@@ -41,7 +41,7 @@ describe "Registration Process" do
 
     context "invalid registration" do
       it "should show errors if store duplication is attempted" do
-        within("#registration_form") do
+        within("#new-customer") do
           fill_in "store_name", with: store.name
           fill_in "user_email", with: valid_email
           fill_in "user_password", with: user.password
@@ -51,7 +51,7 @@ describe "Registration Process" do
       end
 
       it "should show errors if invalid store name is provided" do
-        within("#registration_form") do
+        within("#new-customer") do
           fill_in "store_name", with: ".--!"
           fill_in "user_email", with: valid_email
           fill_in "user_password", with: user.password
@@ -61,7 +61,7 @@ describe "Registration Process" do
       end
 
       it "should show errors if store name is too short" do
-        within("#registration_form") do
+        within("#new-customer") do
           fill_in "store_name", with: "1"
           fill_in "user_email", with: valid_email
           fill_in "user_password", with: user.password
@@ -71,7 +71,7 @@ describe "Registration Process" do
       end
 
       it "should show errors if store name is too long" do
-        within("#registration_form") do
+        within("#new-customer") do
           fill_in "store_name", with: "1"*41
           fill_in "user_email", with: valid_email
           fill_in "user_password", with: user.password

@@ -32,11 +32,11 @@ end
 gem 'rake'
 gem "figaro", '~> 0.6.3'
 gem 'cancan', '= 1.6.8'
-gem "devise", '~> 2.2.3'
 gem 'apartment', path: '../apartment' 
 gem 'spree', '1.3.2'
 gem 'spree_gateway', :github => 'spree/spree_gateway', :branch => '1-3-stable'
 gem 'spree_digital', :github => 'halo/spree_digital', :branch => 'master'
+gem 'spree_auth_devise', :github => "spree/spree_auth_devise", :branch => "1-3-stable"
 gem 'stripe'
 gem 'resque', :github => 'resque/resque', :branch => '1-x-stable'
 gem 'resque-scheduler', :require => 'resque_scheduler'

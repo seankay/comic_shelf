@@ -1,10 +1,13 @@
-<div id="registration_form">
-  <%= form_for(resource, :as => resource_name, :url => url_for(:controller => "users/registrations", :action => "create_with_store", :resource_name => resource_name)) do |f| %>
-  <%= devise_error_messages! %>
+<%= render :partial => 'spree/shared/error_messages', :locals => { :target => @user } %>
 
-  <%= text_field_tag :store_name,nil, placeholder: "Store Name" %>
-  <%= f.email_field :email, placeholder: "Email Address" %>
-  <%= f.password_field :password, placeholder: "Password" %>
-  <%= f.submit "Get Started!" %>
-<% end %>
+<div id="new-customer">
+  <div data-hook="signup">
+    <%= form_for :user, :url => url_for(:controller => "spree/user_registrations", :action => :create_with_store ) do |f| %>
+      <div data-hook="signup_inside_form">
+        <%= text_field_tag :store_name,nil, placeholder: "Store Name" %>
+        <%= f.email_field :email, placeholder: "Email Address" %>
+        <%= f.password_field :password, placeholder: "Password" %>
+        <%= f.submit "Get Started!" %>
+      </div>
+    <% end %>
 </div>

@@ -10,7 +10,7 @@ describe "Home Page" do
   end
 
   it "should show registration form" do
-    should have_selector("#registration_form")
+    should have_selector("#new-customer")
   end
 
   it "should have navigation bar" do

@@ -1,14 +1,13 @@
 require 'resque/server'
 
 ComicShelf::Application.routes.draw do
-  devise_scope :user do
-    get '/login', :to => "devise/sessions#new"
-    get '/signup', :to => "devise/registrations#new"
-    delete '/logout', :to => "devise/sessions#destroy"
-    post '/create_with_store', :to => "users/registrations#create_with_store"
-  end
 
-  devise_for :users, controllers: { registrations: "users/registrations"}
+  root to: 'home#index'
+
+  devise_scope :user do
+    post '/create_with_store', :to => "spree/user_registrations#create_with_store"
+    match '/shop/user/logout', :to => "spree/user_sessions#destroy"
+  end
 
   resources :stores do
     resources :subscriptions do
@@ -19,8 +18,7 @@ ComicShelf::Application.routes.draw do
     resources :users
   end
 
-  match '', to: 'stores#show', constraints: lambda { |r| r.subdomain.present? && r.subdomain != 'www' }
   mount Resque::Server.new, :at => "/resque"
   mount Spree::Core::Engine, :at => '/shop', constraints: lambda { |r| r.subdomain.present? && r.subdomain != 'www' }
-  root to: 'home#index'
+  match '', to: 'stores#show', constraints: lambda { |r| r.subdomain.present? && r.subdomain != 'www' }
 end

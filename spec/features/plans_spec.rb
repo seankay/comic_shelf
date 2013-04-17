@@ -18,11 +18,7 @@ describe "Plans", :vcr, :record => :new_episodes do
     subscription.trial_end_date = Time.now + 14.days
     subscription.save_without_payment
     @store = subscription.store
-    user = FactoryGirl.create(:user, :store_id => @store.id)
-    visit login_url(:subdomain => user.store.subdomain)
-    fill_in "Email", with: user.email
-    fill_in "Password", with: user.password
-    click_button "Sign in"
+    login FactoryGirl.create(:user, :store_id => @store.id)
     visit store_plans_url(@store, :subdomain => @store.subdomain)
   end
 

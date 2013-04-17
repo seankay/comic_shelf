@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Users::RegistrationsController do
+describe Spree::UserRegistrationsController do
   describe "User Creation" do
   end
 end

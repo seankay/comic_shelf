@@ -33,8 +33,6 @@ RSpec.configure do |config|
   end
 
   config.include Rails.application.routes.url_helpers
-  #Devise Test Helpers
-  config.include Devise::TestHelpers, type: :controller
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
@@ -93,10 +91,10 @@ def reset_scope
 end
 
 def login user
-  visit login_url(:subdomain => user.store.subdomain)
+  visit spree.login_url(:subdomain => user.store.subdomain)
   fill_in "Email", with: user.email
   fill_in "Password", with: user.password
-  click_button "Sign in"
+  click_button "Login"
 end    
 
 def register_and_login_user user
