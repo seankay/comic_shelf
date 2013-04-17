@@ -46,13 +46,12 @@
       <% end %>
     </tr>
   </table>
-    <ul class="inline">
-        <li>
-        <%= render 'update_credit_card' if current_store.subscription.card_provided? %>
-        </li>
-        <li>
-        <%= render 'cancel_subscription' unless current_store.subscription.pending_cancelation?%>
-        </li>
-    </ul>
+  <ul class="inline">
+    <li>
+    <%= render 'update_credit_card' if current_store.subscription.card_provided? %>
+    </li>
+    <li>
+    <%= render 'cancel_subscription' if current_store.subscription.active? && !current_store.subscription.pending_cancelation?%>
+    </li>
+  </ul>
 </div>
-<%= render 'cancel_subscription_modal' %>
