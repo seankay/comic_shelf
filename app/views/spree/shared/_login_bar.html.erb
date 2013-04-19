@@ -5,6 +5,7 @@
       <% end %>
       <li><%= link_to t(:dashboard), admin_path(spree_current_user)%></li>
     <% end %>
+    <li><%= link_to t(:account), account_path(current_user) %></li>
   <li><%= link_to t(:logout), spree_logout_path, :method => :delete %></li>
 <% else %>
   <li><%= link_to t(:login), spree_login_path %></li>

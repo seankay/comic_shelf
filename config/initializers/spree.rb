@@ -6,7 +6,7 @@
 # In order to initialize a setting do:
 # config.setting_name = 'new value'
 Spree.config do |config|
-  config.site_name = "Comic Shop"
+  config.site_name = ENV['APPLICATION_NAME']
 end
 
 # Spree.user_class = "User"

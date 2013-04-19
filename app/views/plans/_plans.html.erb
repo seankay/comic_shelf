@@ -44,12 +44,4 @@
       <% end %>
     </tr>
   </table>
-  <ul class="inline">
-    <li>
-    <%= link_to "Update Credit Card", store_subscription_edit_credit_card_path(current_store, current_store.subscription), class: "button" if current_store.subscription.card_provided? %>
-    </li>
-    <li>
-    <%= render 'cancel_subscription' if current_store.subscription.active? && !current_store.subscription.pending_cancelation?%>
-    </li>
-  </ul>
 </div>

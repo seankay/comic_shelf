@@ -46,9 +46,9 @@ class SubscriptionsController < ApplicationController
     @user = params[:id]
     @subscription = Subscription.find(params[:subscription_id])
     if @subscription.update_credit_card params[:subscription][:stripe_card_token]
-      redirect_to request.referer, notice: "Successfully updated your credit card information."
+      redirect_to spree.account_path(current_user), notice: "Successfully updated your credit card information."
     else
-      redirect_to request.referer, alert: "There was a problem updating your credit card information."
+      render :edit_credit_card, alert: "There was a problem updating your credit card information."
     end
   end
 end

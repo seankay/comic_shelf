@@ -1,15 +1,13 @@
+<% if spree_current_user.admin? && current_store.subscription.card_provided? %>
 <h1><%= t(:credit_card) %></h1>
 <dl id="current_credit_card">
   <dt><%= t(:type) %></dt>
-  <dd><%= @credit_card.try(:type) %></dd>
+  <dd><%= @credit_card.type %></dd>
   <dt><%= t(:card_number) %></dt>
-  <dd><%= "***********#{ @credit_card.try(:last4)}"%></dd>
+  <dd><%= "***********#{ @credit_card.last4}"%></dd>
   <dt><%= t(:expiration_date) %></dt>
-  <dd><%= "#{@credit_card.exp_month}'/'#{@credit_card.exp_year}" if @credit_card.exp_month && @credit_card.exp_year %></dd>
-  <dt><%= t(:billing_address) %></dt>
-  <dd><%= @credit_card.name %></dd>
-  <dd><%= @credit_card.address_line1 %></dd>
-  <dd><%= @credit_card.try(:address_line2) %></dd>
-  <dd><%= "#{@credit_card.address_city} #{@credit_card..try(:address_state)} #{@credit_card..try(:address_zip)}" %></dd>
-  <dd><%= @credit_card.address_country %></dd>
+  <dd><%= "#{@credit_card.exp_month}/#{@credit_card.exp_year}" if @credit_card.exp_month && @credit_card.exp_year %></dd>
+  <%= link_to "#{t(:edit)} #{t(:credit_card)}", main_app.store_subscription_edit_credit_card_path(current_store, current_store.subscription), class: "button primary" %>
 </dl>
+<hr>
+<% end %>

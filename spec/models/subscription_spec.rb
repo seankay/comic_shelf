@@ -41,6 +41,13 @@ describe Subscription do
       end
     end
 
+    describe "subscriber" do
+      it "should return a customer" do
+        Stripe::Customer.stub(:retrieve) { Stripe::Customer.new }
+        subscription.subscriber.should be_kind_of(Stripe::Customer)
+      end
+    end
+
     describe "active?", :vcr, :record => :new_episodes do
       it "should return false if card is not provided or is on trial" do
         subscription.save_without_payment

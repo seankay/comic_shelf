@@ -15,24 +15,8 @@
 
   <br>
   <hr>
-  <h2>Billing Address</h2>
-  <%= label_tag :full_name, t(:full_name) %>
-  <%= text_field_tag :full_name, nil, name:nil, placeholder: "Full Name" %>
-
-  <%= label_tag :address_line1, t(:address_line_1) %>
-  <%= text_field_tag :address_line1, nil, name:nil, placeholder: "Street Address" %>
-
-  <%= label_tag :address_line2, t(:address_line_2) %>
-  <%= text_field_tag :address_line2, nil, name:nil, placeholder: "Apartment #, Floor, Suite #" %>
-
   <%= label_tag :zip_code, t(:zip_code) %>
   <%= text_field_tag :zip_code, nil, name:nil, placeholder: "Zip / Postal Code" %>
-
-  <%= label_tag :state, "#{t(:state)}"%>
-  <%= text_field_tag :state, nil, name:nil, placeholder: "State / Province / Region" %>
-
-  <%= label_tag :country_code, t(:contry) %>
-  <%= country_select_tag :country_code, {selected: %w(US)}, prompt: 'Select Your Country' %>
 <br>
 <div id="stripe_error">
   <noscript>Javascript is not enabled and is required for this form. Enable it in your browser settings.</noscript>

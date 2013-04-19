@@ -1,0 +1,7 @@
+<div id="cancel_subscription">
+  <%= link_to "Cancel Subscription", main_app.store_subscription_path(current_store, current_store.subscription), 
+    :method => :delete,
+    :class  => 'button red',
+    :confirm => "Are you sure you want to cancel your subscription to #{current_store.subscription.plan.name}?"
+  %>
+</div>
