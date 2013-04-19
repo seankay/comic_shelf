@@ -17,6 +17,11 @@ Spree::UserRegistrationsController.class_eval do
     redirect_to main_app.root_url, alert: @error_message if @error_message
   end
 
+  def create
+    @store = current_store
+    super
+  end
+
   protected
 
   def after_sign_up_path_for(resource)

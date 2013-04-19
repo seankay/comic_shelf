@@ -1,0 +1,15 @@
+<h1><%= t(:credit_card) %></h1>
+<dl id="current_credit_card">
+  <dt><%= t(:type) %></dt>
+  <dd><%= @credit_card.try(:type) %></dd>
+  <dt><%= t(:card_number) %></dt>
+  <dd><%= "***********#{ @credit_card.try(:last4)}"%></dd>
+  <dt><%= t(:expiration_date) %></dt>
+  <dd><%= "#{@credit_card.exp_month}'/'#{@credit_card.exp_year}" if @credit_card.exp_month && @credit_card.exp_year %></dd>
+  <dt><%= t(:billing_address) %></dt>
+  <dd><%= @credit_card.name %></dd>
+  <dd><%= @credit_card.address_line1 %></dd>
+  <dd><%= @credit_card.try(:address_line2) %></dd>
+  <dd><%= "#{@credit_card.address_city} #{@credit_card..try(:address_state)} #{@credit_card..try(:address_zip)}" %></dd>
+  <dd><%= @credit_card.address_country %></dd>
+</dl>

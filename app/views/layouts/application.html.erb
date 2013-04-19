@@ -10,6 +10,9 @@
 </head>
 <body>
   <%= render 'layouts/navbar' %>
+  <% if current_store.subscription.trial? %>
+    <%= render 'subscriptions/trial' %>
+  <% end %>
   <%= render 'shared/flash_notification' %>
   <%= yield %>
   <%= debug(params)if Rails.env.development? %>

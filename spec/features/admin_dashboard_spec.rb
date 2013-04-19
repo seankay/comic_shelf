@@ -8,7 +8,7 @@ describe "Admin Dashboard" do
   before do 
     store.subscription = subscription
     seed_plans
-    clean_up_tables(store, User)
+    clean_up_tables(store, Spree::User)
     register_and_login_user FactoryGirl.build(:user, :store_id => store.id)
     click_link "Dashboard"
     click_link "Configuration"

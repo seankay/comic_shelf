@@ -22,14 +22,11 @@ class SubscriptionsController < ApplicationController
     if @subscription.update_subscription updated_subscription
       current_store.subscription = @subscription
       UserMailer.update_subscription(@subscription.id).deliver
-      redirect_to spree_url(:subdomain => current_store.subdomain),
-        notice: "Successfully subscribed to #{@subscription.plan.name}!"
+      redirect_to spree_url(:subdomain => current_store.subdomain), notice: "Successfully subscribed to #{@subscription.plan.name}!"
     else
-      redirect_to store_plans_path(current_store),
-        alert: "Error. Unable to subscribe you to your selected plan."
+      redirect_to store_plans_path(current_store), alert: @subscription.errors.full_messages.first
     end
   end
-
 
   def destroy
     @subscription = Subscription.find(params[:id])
@@ -46,13 +43,12 @@ class SubscriptionsController < ApplicationController
   end
 
   def update_credit_card
+    @user = params[:id]
     @subscription = Subscription.find(params[:subscription_id])
     if @subscription.update_credit_card params[:subscription][:stripe_card_token]
-      flash[:notice] = "Successfully updated your credit card information."
-      redirect_to store_plans_path(current_store)
+      redirect_to request.referer, notice: "Successfully updated your credit card information."
     else
-      flash[:alert] = "There was a problem updating your credit card information."
-      render :edit_credit_card 
+      redirect_to request.referer, alert: "There was a problem updating your credit card information."
     end
   end
 end

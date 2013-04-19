@@ -4,35 +4,10 @@
 
 <div class="container">
   <%= render 'shared/error_messages', :object => @subscription %>
-
-  <div class="name"><h1><%= @plan.name %></h1></div>
-  <div class="max_products"><h2><%= @plan.max_products %> prodcuts</h2></div>
-  <div class="price"><h2><%= @plan.price %></h2></div>
-
+  <%= render 'plans/plan_info' %>
+  <hr>
   <%= form_for [current_store, @subscription] do |f| %>
-
-    <%= f.hidden_field :stripe_card_token %>
-    <%= f.hidden_field :email, :value => current_user.email %>
-    <%= f.hidden_field :plan_id %>
-
-    <div class="field">
-      <%= label_tag :card_number, "Credit Card Number" %>
-      <%= text_field_tag :card_number, nil, name:nil %>
-    </div>
-
-    <div class="field">
-      <%= label_tag :card_code, "Security Code on Card (CVV)" %>
-      <%= text_field_tag :card_code, nil, name:nil %>
-    </div>
-
-    <div class="field">
-      <%= label_tag :card_month, "Card Expiration" %>
-      <%= select_month nil, {add_month_numbers: true }, {name:nil, id: "card_month"} %>
-      <%= select_year nil, {start_year: Date.today.year, end_year: Date.today.year+15 }, {name:nil, id: "card_year"} %>
-    </div>
-    <div id="stripe_error">
-      <noscript>Javascript is not enabled and is required for this form. Enable it in your browser settings.</noscript>
-    </div>
+    <%= render 'shared/credit_card_form', :f => f %>
     <div class="actions">
       <%= f.submit "Subscribe" %>
     </div>

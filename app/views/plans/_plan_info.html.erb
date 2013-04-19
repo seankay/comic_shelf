@@ -1,0 +1,15 @@
+<% if spree_current_user.admin? %>
+<h1><%= t(:plan) %></h1>
+<dl id="plan">
+  <dt><h5><%= t(:name) %>:</h5></dt>
+  <% if current_store.subscription.active? %>
+    <dd><h5><%= @plan.name %> <%= link_to "(#{t(:edit)})", main_app.store_plans_path(current_store) %></h5></dd>
+  <% elsif current_store.subscription.pending_cancelation? %>
+    <dd><h5><%= @plan.name %>(pending cancelation) <%= link_to "(#{t(:resubscribe)})", main_app.store_plans_path(current_store) %></h5></dd>
+  <% else %>
+    <dd><h5><%= @plan.name %></h5></dd>
+  <% end %>
+  <dt><h5><%= t(:price) %>:</h5></dt>
+  <dd><h5><%= number_to_currency @plan.price %></h5></dd>
+</dl>
+<% end %>

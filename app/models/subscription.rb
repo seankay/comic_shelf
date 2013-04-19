@@ -65,10 +65,11 @@ class Subscription < ActiveRecord::Base
 
   def update_subscription new_subscription
     if valid?
-      if(new_subscription.plan.id == self.plan.id) && !pending_cancelation?
+      if duplicate_plan new_subscription
         errors.add :base, "You are already on the #{plan.name} plan."
         return false
       end
+
       if new_subscription.stripe_card_token.present?
         customer.update_subscription(
           :plan => new_subscription.plan.plan_identifier, 
@@ -112,6 +113,10 @@ class Subscription < ActiveRecord::Base
     false
   end
 
+  def subscriber 
+    customer
+  end
+
   private
 
   def customer
@@ -129,6 +134,10 @@ class Subscription < ActiveRecord::Base
       self.cancelation_date = Time.zone.at details.current_period_end
       Resque.enqueue_at(Time.zone.at(cancelation_date), Workers::SubscriptionCanceler, id)
       save!
+  end
+
+  def duplicate_plan new_subscription
+    (new_subscription.plan.id == self.plan.id) && !pending_cancelation? && active?
   end
 
   def successfully_canceled? details

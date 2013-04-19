@@ -1,0 +1,13 @@
+<% content_for :dynamic_javascripts do %>
+  <%= javascript_include_tag "https://js.stripe.com/v1/" %>
+  <%= javascript_include_tag "subscriptions" %>
+<% end %>
+
+<h1><%= t(:update) + " " +  t(:credit_card) %></h1>
+<br>
+<%= form_for [current_store, subscription], url: main_app.store_subscription_update_credit_card_path(current_store, subscription), method: :post do |f| %>
+  <%= render 'shared/credit_card_form.html.erb', :f => f %>
+  <div class="actions">
+    <%= f.submit t(:update)+ " " +t(:credit_card), class: "button primary" %>
+  </div>
+<% end %>

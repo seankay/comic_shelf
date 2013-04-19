@@ -1,4 +1,5 @@
 require 'spec_helper'
+include ActionView::Helpers::NumberHelper
 
 describe "Plans", :vcr, :record => :new_episodes do
   subject { page }
@@ -40,9 +41,9 @@ describe "Plans", :vcr, :record => :new_episodes do
       it "should have information for plan" do
         plan = low_plan
         click_link("#{plan.plan_identifier}")
-        should have_selector("div.price", text: plan.price.to_s)
-        should have_selector("div.name", text: plan.name)
-        should have_selector("div.max_products", text: plan.max_products.to_s)
+        should have_content(number_to_currency(plan.price))
+        should have_content(plan.name)
+        should have_content(plan.max_products.to_s)
       end
 
       it "should have trial days left if current store is on trial subscription" do

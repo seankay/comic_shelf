@@ -17,6 +17,7 @@ group :test, :development do
   gem "rspec-rails"
   gem "shoulda-matchers"
   gem "pry"
+  gem "launchy"
 end
 
 group :test do
@@ -29,7 +30,9 @@ group :test do
   gem 'resque_spec'
 end
 
-gem 'rake'
+gem "letter_opener", :group => :development
+
+gem 'carmen-rails'
 gem "figaro", '~> 0.6.3'
 gem 'cancan', '= 1.6.8'
 gem 'apartment', path: '../apartment' 

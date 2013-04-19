@@ -1,0 +1,39 @@
+<%= f.hidden_field :stripe_card_token %>
+<%= f.hidden_field :email, :value => current_user.email %>
+<%= f.hidden_field :plan_id %>
+
+  <h2>Credit Card</h2>
+  <%= label_tag :card_number, t(:credit_card_number) %>
+  <%= text_field_tag :card_number, nil, name:nil %>
+
+  <%= label_tag :card_code, t(:security_code) +" (CVV)" %>
+  <%= text_field_tag :card_code, nil, name:nil %>
+
+  <%= label_tag :card_expiration, t(:card_expiration) %>
+  <%= select_month nil, {add_month_numbers: true }, {name:nil, id: "card_month"} %>
+  <%= select_year nil, {start_year: Date.today.year, end_year: Date.today.year+15 }, {name:nil, id: "card_year"} %>
+
+  <br>
+  <hr>
+  <h2>Billing Address</h2>
+  <%= label_tag :full_name, t(:full_name) %>
+  <%= text_field_tag :full_name, nil, name:nil, placeholder: "Full Name" %>
+
+  <%= label_tag :address_line1, t(:address_line_1) %>
+  <%= text_field_tag :address_line1, nil, name:nil, placeholder: "Street Address" %>
+
+  <%= label_tag :address_line2, t(:address_line_2) %>
+  <%= text_field_tag :address_line2, nil, name:nil, placeholder: "Apartment #, Floor, Suite #" %>
+
+  <%= label_tag :zip_code, t(:zip_code) %>
+  <%= text_field_tag :zip_code, nil, name:nil, placeholder: "Zip / Postal Code" %>
+
+  <%= label_tag :state, "#{t(:state)}"%>
+  <%= text_field_tag :state, nil, name:nil, placeholder: "State / Province / Region" %>
+
+  <%= label_tag :country_code, t(:contry) %>
+  <%= country_select_tag :country_code, {selected: %w(US)}, prompt: 'Select Your Country' %>
+<br>
+<div id="stripe_error">
+  <noscript>Javascript is not enabled and is required for this form. Enable it in your browser settings.</noscript>
+</div>

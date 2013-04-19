@@ -1,8 +1,6 @@
 <h1>Plans</h1>
-<% if current_store.subscription.trial? %>
-  <%= render 'shared/trial' %>
-<% elsif current_store.subscription.pending_cancelation? %>
-  <%= render 'shared/subscription_days_remaining' %>
+<% if current_store.subscription.pending_cancelation? %>
+  <%= render 'subscriptions/subscription_days_remaining' %>
 <% end %>
 <div class="container">
   <table class="table">
@@ -35,7 +33,7 @@
             <%= link_to "Subscribe", main_app.edit_store_subscription_path(current_store, current_store.subscription, :plan_id => plan.id), class: "btn btn-primary btn-small", id: plan.plan_identifier %>
           <% else %>
             <% if current_plan?(plan.plan_identifier) && !current_store.subscription.pending_cancelation? %>
-              <%= label_tag "Current Plan"%>
+              <%= link_to "Current Plan","#", class: "button primary disabled" %>
             <% else %>
               <%= form_tag main_app.store_subscription_path(current_store, current_store.subscription, :plan_id => plan.id), :method => :put do %>
                 <%= submit_tag "Subscribe" %>
@@ -48,7 +46,7 @@
   </table>
   <ul class="inline">
     <li>
-    <%= render 'update_credit_card' if current_store.subscription.card_provided? %>
+    <%= link_to "Update Credit Card", store_subscription_edit_credit_card_path(current_store, current_store.subscription), class: "button" if current_store.subscription.card_provided? %>
     </li>
     <li>
     <%= render 'cancel_subscription' if current_store.subscription.active? && !current_store.subscription.pending_cancelation?%>
