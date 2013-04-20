@@ -7,3 +7,10 @@ a.button.red {
   border: 1px solid;
   border-color: #bd362f #bd362f #802420;
 }
+
+.trial_flash {
+  color: yellow;
+  &:hover{
+    color: white;
+  }
+}
