@@ -1,4 +1,4 @@
-class SubscriptionsController < ApplicationController
+class SubscriptionsController < Spree::Admin::BaseController
   before_filter :authenticate_user!
 
   def show
@@ -22,9 +22,9 @@ class SubscriptionsController < ApplicationController
     if @subscription.update_subscription updated_subscription
       current_store.subscription = @subscription
       UserMailer.update_subscription(@subscription.id).deliver
-      redirect_to spree_url(:subdomain => current_store.subdomain), notice: "Successfully subscribed to #{@subscription.plan.name}!"
+      redirect_to main_app.store_plans_path, notice: "Successfully subscribed to #{@subscription.plan.name}!"
     else
-      redirect_to store_plans_path(current_store), alert: @subscription.errors.full_messages.first
+      redirect_to main_app.store_plans_path(current_store), alert: @subscription.errors.full_messages.first
     end
   end
 
@@ -32,9 +32,9 @@ class SubscriptionsController < ApplicationController
     @subscription = Subscription.find(params[:id])
     if @subscription.cancel_subscription
       UserMailer.cancel_subscription(@subscription.id).deliver
-      redirect_to spree_url(:subdomain => current_store.subdomain), :notice => "Your subscription has been cancelled."
+      redirect_to main_app.store_plans_path, :notice => "Your subscription has been cancelled."
     else
-      redirect_to store_plans_path(current_store), :alert => "Unable to remove your subscription. Please contact support for assistance."
+      redirect_to main_app.store_plans_path(current_store), :alert => "Unable to remove your subscription. Please contact support for assistance."
     end
   end
 
@@ -46,7 +46,7 @@ class SubscriptionsController < ApplicationController
     @user = params[:id]
     @subscription = Subscription.find(params[:subscription_id])
     if @subscription.update_credit_card params[:subscription][:stripe_card_token]
-      redirect_to spree.account_path(current_user), notice: "Successfully updated your credit card information."
+      redirect_to main_app.store_plans_path(current_store), notice: "Successfully updated your credit card information."
     else
       render :edit_credit_card, alert: "There was a problem updating your credit card information."
     end

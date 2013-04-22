@@ -1,14 +1,15 @@
 require 'spec_helper'
 
 describe "Admin Dashboard" do
-  let(:subscription) { FactoryGirl.build(:subscription) }
   let(:store) { FactoryGirl.create(:store)}
+  let(:subscription) { FactoryGirl.create(:subscription) }
   subject { page }
 
   before do 
-    store.subscription = subscription
     seed_plans
     clean_up_tables(store, Spree::User)
+    Spree::HomeController.any_instance.stub(:current_store) { store }
+    Store.any_instance.stub(:subscription) { subscription } 
     register_and_login_user FactoryGirl.build(:user, :store_id => store.id)
     click_link "Dashboard"
     click_link "Configuration"

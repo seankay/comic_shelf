@@ -7,3 +7,6 @@ en:
   plan: "Plan"
   resubscribe: "Resubscribe"
   subscribing: "Subscribing"
+  update_credit_card: "Update Credit Card"
+  cancel_subscription: "Cancel Subscription"
+  subscription_settings: "Subscription Settings"

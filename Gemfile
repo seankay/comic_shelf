@@ -32,7 +32,6 @@ end
 
 gem "letter_opener", :group => :development
 
-gem 'carmen-rails'
 gem "figaro", '~> 0.6.3'
 gem 'cancan', '= 1.6.8'
 gem 'apartment', path: '../apartment' 

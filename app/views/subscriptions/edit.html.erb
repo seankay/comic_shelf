@@ -1,15 +1,17 @@
 <% content_for :dynamic_javascripts do %>
-  <%= javascript_include_tag "https://js.stripe.com/v1/" %>
+  <%= javascript_include_tag "subscriptions","https://js.stripe.com/v1/" %>
+<% end %>
+<%= render :partial => 'spree/admin/shared/configuration_menu' %>
+<% content_for :page_title do %>
+  <%= t(:Subscribing) %>
 <% end %>
 
 <div class="container">
   <%= render 'shared/error_messages', :object => @subscription %>
-  <%= render 'plans/plan_info' %>
-  <hr>
-  <%= form_for [current_store, @subscription] do |f| %>
+  <%= form_for [current_store, @subscription], url: main_app.store_subscription_path(current_store, current_store.subscription) do |f| %>
     <%= render 'shared/credit_card_form', :f => f %>
     <div class="actions">
-      <%= f.submit "Subscribe" %>
+      <%= f.submit "Subscribe to #{@plan.name}" %>
     </div>
   <% end %>
 </div>

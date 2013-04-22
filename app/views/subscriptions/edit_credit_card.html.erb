@@ -1,13 +1,17 @@
 <% content_for :dynamic_javascripts do %>
-  <%= javascript_include_tag "https://js.stripe.com/v1/" %>
+  <%= javascript_include_tag "subscriptions", "https://js.stripe.com/v1/" %>
+<% end %>
+<%= render :partial => 'spree/admin/shared/configuration_menu' %>
+<% content_for :page_title do %>
+  <%= t(:update_credit_card) %>
 <% end %>
 <div class="container">
   <%= render 'shared/error_messages', :object => @subscription %>
 
-  <%= form_for [current_store, @subscription], url: { action: :update_credit_card}, method: :post  do |f| %>
+  <%= form_for [current_store, @subscription], url: main_app.store_subscription_update_credit_card_path(current_store, @subscription), method: :post  do |f| %>
     <%= render 'shared/credit_card_form', f: f %>
     <div class="actions">
-      <%= f.submit "Subscribe" %>
+      <%= f.submit t(:update_credit_card) %>
     </div>
   <% end %>
 </div>

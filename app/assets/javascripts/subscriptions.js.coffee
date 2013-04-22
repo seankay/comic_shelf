@@ -13,7 +13,6 @@ subscription =
         subscription.processCard()
         false
       else
-        alert("Returning false")
         true
 
   getCard: ->
@@ -23,12 +22,7 @@ subscription =
         cvc: $('#card_code').val(),
         exp_month: $('#card_month').val(),
         exp_year: $('#card_year').val(),
-        name: $('#full_name').val(),
-        address_line1: $('#address_line1').val(),
-        address_line2: $('#address_line2').val(),
         address_zip: $('#zip_code').val(),
-        address_state: $('#state').val(),
-        address_country: $('#country_code option').filter(":selected").val(),
       }
 
   card_valid: ->

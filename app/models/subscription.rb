@@ -65,7 +65,7 @@ class Subscription < ActiveRecord::Base
 
   def update_subscription new_subscription
     if valid?
-      if duplicate_plan new_subscription
+      if duplicate_plan? new_subscription
         errors.add :base, "You are already on the #{plan.name} plan."
         return false
       end
@@ -100,8 +100,7 @@ class Subscription < ActiveRecord::Base
   def cancel_subscription
     if valid?
       details = customer.cancel_subscription
-      successfully_canceled?(details) ? 
-        save_with_cancelation_details(details) : false
+      successfully_canceled?(details) ? save_with_cancelation_details(details) : false
     else 
       false
     end
@@ -136,7 +135,7 @@ class Subscription < ActiveRecord::Base
       save!
   end
 
-  def duplicate_plan new_subscription
+  def duplicate_plan? new_subscription
     (new_subscription.plan.id == self.plan.id) && !pending_cancelation? && active?
   end
 

@@ -2,21 +2,18 @@
 <%= f.hidden_field :email, :value => current_user.email %>
 <%= f.hidden_field :plan_id %>
 
-  <h2>Credit Card</h2>
-  <%= label_tag :card_number, t(:credit_card_number) %>
-  <%= text_field_tag :card_number, nil, name:nil %>
-
-  <%= label_tag :card_code, t(:security_code) +" (CVV)" %>
-  <%= text_field_tag :card_code, nil, name:nil %>
-
-  <%= label_tag :card_expiration, t(:card_expiration) %>
-  <%= select_month nil, {add_month_numbers: true }, {name:nil, id: "card_month"} %>
-  <%= select_year nil, {start_year: Date.today.year, end_year: Date.today.year+15 }, {name:nil, id: "card_year"} %>
-
-  <br>
-  <hr>
-  <%= label_tag :zip_code, t(:zip_code) %>
-  <%= text_field_tag :zip_code, nil, name:nil, placeholder: "Zip / Postal Code" %>
+<%= text_field_tag :card_number, nil, name:nil, placeholder: "Credit Card Number" %>
+<%= text_field_tag :card_code, nil, name:nil, placeholder: "CVV Security Code" %>
+<i class="icon-help"></i>
+<br>
+<br>
+<%= label_tag :card_expiration, t(:card_expiration) %><br>
+<%= select_month nil, {add_month_numbers: true }, {name:nil, id: "card_month"} %>
+<%= select_year nil, {start_year: Date.today.year, end_year: Date.today.year+15 }, {name:nil, id: "card_year"} %>
+<br>
+<br>
+<%= text_field_tag :zip_code, nil, name:nil, placeholder: "Zip / Postal Code" %>
+<br>
 <br>
 <div id="stripe_error">
   <noscript>Javascript is not enabled and is required for this form. Enable it in your browser settings.</noscript>

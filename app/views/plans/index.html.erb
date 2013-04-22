@@ -1,1 +1,9 @@
+<%= render :partial => 'spree/admin/shared/configuration_menu' %>
+<% content_for :page_title do %>
+  <%= t(:subscription_settings) %>
+<% end %>
+<% if @subscription.trial? %>
+  <%= render 'subscriptions/trial' %>
+<% end %>
+<%= render 'subscriptions/credit_card_info' %>
 <%= render 'plans' %>

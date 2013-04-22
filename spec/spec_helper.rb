@@ -24,6 +24,8 @@ end
 
 RSpec.configure do |config|
 
+  config.include Devise::TestHelpers, type: :controller
+
   config.treat_symbols_as_metadata_keys_with_true_values = true
 
   config.around(:each, :vcr) do |example|
@@ -91,7 +93,9 @@ def reset_scope
 end
 
 def login user
-  visit spree.login_url(:subdomain => user.store.subdomain)
+  set_host "lvh.me:3000"
+  visit root_url(subdomain: user.store.subdomain)
+  click_link "Login"
   fill_in "Email", with: user.email
   fill_in "Password", with: user.password
   click_button "Login"

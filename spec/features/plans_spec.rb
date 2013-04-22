@@ -38,13 +38,6 @@ describe "Plans", :vcr, :record => :new_episodes do
 
     describe "Elements" do
       before { ResqueSpec.reset! }
-      it "should have information for plan" do
-        plan = low_plan
-        click_link("#{plan.plan_identifier}")
-        should have_content(number_to_currency(plan.price))
-        should have_content(plan.name)
-        should have_content(plan.max_products.to_s)
-      end
 
       it "should have trial days left if current store is on trial subscription" do
         should have_selector("div#trial", text: "Your trial ends")
@@ -54,7 +47,7 @@ describe "Plans", :vcr, :record => :new_episodes do
         subscription.update_subscription new_subscription
         subscription.cancel_subscription
         visit store_plans_url(@store, :subdomain => @store.subdomain)
-        should have_content("Your subscription ends in")
+        should have_content("Subscription pending cancelation")
       end
 
       it "should display 'Current Plan' if store has subscription", :vcr, :record => :new_episodes do

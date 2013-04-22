@@ -1,10 +1,8 @@
-<h1>Plans</h1>
 <% if current_store.subscription.pending_cancelation? %>
   <%= render 'subscriptions/subscription_days_remaining' %>
 <% end %>
-<div class="container">
-  <table class="table">
-    <caption><h1>Pricing</h1></caption>
+<div>
+  <table class="index table">
     <tr>
       <% @plans.each do |plan| %>
         <td>
@@ -30,10 +28,10 @@
       <% @plans.each do |plan| %>
         <td>
           <% if !current_store.subscription.active? %>
-            <%= link_to "Subscribe", main_app.edit_store_subscription_path(current_store, current_store.subscription, :plan_id => plan.id), class: "btn btn-primary btn-small", id: plan.plan_identifier %>
+            <%= link_to "Subscribe", main_app.edit_store_subscription_path(current_store, current_store.subscription, :plan_id => plan.id), class: "button primary ", id: plan.plan_identifier %>
           <% else %>
             <% if current_plan?(plan.plan_identifier) && !current_store.subscription.pending_cancelation? %>
-              <%= link_to "Current Plan","#", class: "button primary disabled" %>
+              <%= link_to "Current Plan","#", id: "current_plan",class: "button primary disabled" %>
             <% else %>
               <%= form_tag main_app.store_subscription_path(current_store, current_store.subscription, :plan_id => plan.id), :method => :put do %>
                 <%= submit_tag "Subscribe" %>
@@ -45,3 +43,6 @@
     </tr>
   </table>
 </div>
+<% if active_and_not_pending_cancelation? %> 
+  <%= render 'subscriptions/cancel_subscription' %>
+<% end %>
