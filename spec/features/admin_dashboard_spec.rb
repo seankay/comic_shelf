@@ -18,7 +18,7 @@ describe "Admin Dashboard" do
   describe "Configuration", :vcr do
     describe "Side Menu" do
       it "should have subscription menu" do
-        page.should have_link("Subscription", edit_store_subscription_path(store, store.subscription) )
+       should have_link("Subscription", edit_store_subscription_path(store, store.subscription) )
       end
     end
   end
