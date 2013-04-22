@@ -7,4 +7,8 @@ module ApplicationHelper
   def current_plan? plan
     current_store.subscription.plan.plan_identifier.eql?(plan)
   end
+
+  def logo_present?
+    Spree::Config[:logo].present?
+  end
 end

@@ -17,3 +17,4 @@ end
 
 #enable auto capture for Stripe et al.
 Spree::Config[:auto_capture] = true unless Spree::Config[:auto_capture].present?
+Spree::Config[:logo] = nil

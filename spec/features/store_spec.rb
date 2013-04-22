@@ -10,6 +10,8 @@ describe "Store" do
 
   describe "Page", :vcr, :record => :new_episodes do
     before do
+      Spree::HomeController.any_instance.stub(:current_store) { store }
+      Store.any_instance.stub(:subscription) { subscription } 
       set_host "lvh.me:3000"
       seed_plans
       user = FactoryGirl.build(:user)
@@ -17,7 +19,31 @@ describe "Store" do
       user.store.subscription = subscription
       register_and_login_user user
     end
-    it "should not show dashboard selection for non-admins"
-    it "should show dashboard selection for non-admins"
+
+    after { Spree::Config[:logo] = nil } 
+
+    it "should not show dashboard selection for non-admins" do
+      non_admin = FactoryGirl.build(:user)
+      register_and_login_user non_admin
+      non_admin.spree_roles = []
+      visit current_url
+      should_not have_link("Dashboard")
+    end
+
+    it "should show dashboard selection for admins" do
+      should have_link("Dashboard")
+    end
+
+    it "should show store name if logo is not present" do
+      Spree::Config[:logo] = nil
+      visit current_url
+      should have_selector("h1", text: store.name)
+    end
+
+    it "should not show store name if logo is present" do
+      Spree::Config[:logo] = "path/to/logo"
+      visit current_url
+      should_not have_selector("h1", text: store.name)
+    end
   end
 end
