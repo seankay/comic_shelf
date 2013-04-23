@@ -6,7 +6,6 @@
 # In order to initialize a setting do:
 # config.setting_name = 'new value'
 Spree.config do |config|
-  config.site_name = ENV['APPLICATION_NAME']
 end
 
 # Spree.user_class = "User"
@@ -17,4 +16,3 @@ end
 
 #enable auto capture for Stripe et al.
 Spree::Config[:auto_capture] = true unless Spree::Config[:auto_capture].present?
-Spree::Config[:logo] = nil

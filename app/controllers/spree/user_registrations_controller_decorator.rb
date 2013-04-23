@@ -7,6 +7,7 @@ Spree::UserRegistrationsController.class_eval do
     if resource.valid?
       if @store.save
         DatabaseUtility.switch @store.subdomain
+        set_spree_config_defaults!
         create_devise_resource
       else
         @error_message = @store.error_reasons
@@ -23,6 +24,15 @@ Spree::UserRegistrationsController.class_eval do
   end
 
   protected
+
+  def set_spree_config_defaults!
+    Spree::Config[:site_name] = @store.name
+    Spree::Config[:logo] = nil
+    Spree::Config[:default_meta_keywords] = @store.name
+    Spree::Config[:default_meta_description] = "#{@store.name}"
+    Spree::Config[:default_seo_title] = "#{@store.name}"
+    Spree::Config[:site_url] = "#{@store.subdomain}.#{ENV['APPLICATION_URL']}"
+  end
 
   def after_sign_up_path_for(resource)
     main_app.spree_url(:subdomain => @store.subdomain)

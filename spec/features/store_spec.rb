@@ -20,7 +20,10 @@ describe "Store" do
       register_and_login_user user
     end
 
-    after { Spree::Config[:logo] = nil } 
+    after do 
+      Spree::Config[:logo] = nil
+      Spree::Config[:site_name] = ENV['APPLICATION_NAME']
+    end
 
     it "should not show dashboard selection for non-admins" do
       non_admin = FactoryGirl.build(:user)
@@ -36,6 +39,7 @@ describe "Store" do
 
     it "should show store name if logo is not present" do
       Spree::Config[:logo] = nil
+      Spree::Config[:site_name] = store.name
       visit current_url
       should have_selector("h1", text: store.name)
     end

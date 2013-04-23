@@ -11,4 +11,8 @@ module ApplicationHelper
   def logo_present?
     Spree::Config[:logo].present?
   end
+
+  def name
+    Spree::Config[:site_name]
+  end
 end

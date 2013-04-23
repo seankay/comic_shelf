@@ -15,7 +15,7 @@ describe "Admin Dashboard" do
     click_link "Configuration"
   end
 
-  describe "Configuration", :vcr do
+  describe "Configuration", :vcr, record: :new_episodes do
     describe "Side Menu" do
       it "should have subscription menu" do
        should have_link("Subscription", edit_store_subscription_path(store, store.subscription) )
