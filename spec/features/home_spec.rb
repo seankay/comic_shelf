@@ -16,4 +16,15 @@ describe "Home Page" do
   it "should have navigation bar" do
     should have_selector(".navbar")
   end
+
+  describe "Pricing Page" do
+    before do 
+      seed_plans
+      click_link "Pricing"
+    end
+
+    it "Should list plan pricing" do
+      should have_content("Try ComicShelf free for 14 days!")
+    end
+  end
 end

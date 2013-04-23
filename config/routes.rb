@@ -19,5 +19,6 @@ ComicShelf::Application.routes.draw do
   match '', to: 'stores#show', constraints: lambda { |r| r.subdomain.present? && r.subdomain != 'www' }
   mount Resque::Server.new, :at => "/resque"
   mount Spree::Core::Engine, :at => '/shop', constraints: lambda { |r| r.subdomain.present? && r.subdomain != 'www' }
+  match '/pricing', to: "home#pricing"
   root to: 'home#index'
 end

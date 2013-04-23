@@ -6,4 +6,8 @@ class HomeController < ApplicationController
     @store = Store.new
   end
 
+  def pricing
+    @plans = Plan.all
+  end
+
 end
