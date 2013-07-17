@@ -1,4 +1,3 @@
-TODO
+Comic Shelf: A multi-tenancy comic shop hosting platform
 =======
-comic_shelf
-===========
+WIP
