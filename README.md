@@ -1,3 +1,6 @@
-Comic Shelf: A multi-tenancy comic shop hosting platform
+Comic Shelf
 =======
+
+A multi-tenancy comic shop hosting platform
+
 WIP
